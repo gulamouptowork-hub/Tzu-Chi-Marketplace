@@ -1,0 +1,12 @@
+node_modules
+.next
+.next-integration
+.test-data
+.dev-data
+.cache
+.git
+.env*
+!.env.example
+artifacts
+playwright-report
+test-results

@@ -1,0 +1,11 @@
+node_modules
+.next
+.next-integration
+.test-data
+.dev-data
+.cache
+package-lock.json
+playwright-report
+test-results
+public/demo
+artifacts/

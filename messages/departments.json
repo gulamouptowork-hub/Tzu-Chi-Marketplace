@@ -1,0 +1,256 @@
+{
+  "source": "https://www.tcu.edu.tw/p/412-1033-4801.php",
+  "checkedAt": "2026-10-02",
+  "departments": [
+    {
+      "id": "medicine-1",
+      "college": "醫學院",
+      "name": "醫學系"
+    },
+    {
+      "id": "medicine-2",
+      "college": "醫學院",
+      "name": "藥學系"
+    },
+    {
+      "id": "medicine-3",
+      "college": "醫學院",
+      "name": "醫學檢驗生物技術學系"
+    },
+    {
+      "id": "medicine-4",
+      "college": "醫學院",
+      "name": "物理治療學系"
+    },
+    {
+      "id": "medicine-5",
+      "college": "醫學院",
+      "name": "公共衛生學系"
+    },
+    {
+      "id": "medicine-6",
+      "college": "醫學院",
+      "name": "學士後中醫學系"
+    },
+    {
+      "id": "medicine-7",
+      "college": "醫學院",
+      "name": "分子生物暨人類遺傳學系"
+    },
+    {
+      "id": "medicine-8",
+      "college": "醫學院",
+      "name": "醫學影像暨放射科學系"
+    },
+    {
+      "id": "medicine-9",
+      "college": "醫學院",
+      "name": "醫學系生物醫學碩士班"
+    },
+    {
+      "id": "medicine-10",
+      "college": "醫學院",
+      "name": "臨床藥學研究所碩士班"
+    },
+    {
+      "id": "medicine-11",
+      "college": "醫學院",
+      "name": "醫學檢驗生物技術學系碩士班"
+    },
+    {
+      "id": "medicine-12",
+      "college": "醫學院",
+      "name": "物理治療學系碩士班"
+    },
+    {
+      "id": "medicine-13",
+      "college": "醫學院",
+      "name": "公共衛生學系碩士班"
+    },
+    {
+      "id": "medicine-14",
+      "college": "醫學院",
+      "name": "學士後中醫學系碩士班"
+    },
+    {
+      "id": "medicine-15",
+      "college": "醫學院",
+      "name": "分子生物暨人類遺傳學系碩士班"
+    },
+    {
+      "id": "medicine-16",
+      "college": "醫學院",
+      "name": "醫學影像暨放射科學系碩士班"
+    },
+    {
+      "id": "medicine-17",
+      "college": "醫學院",
+      "name": "醫學科學研究所博士班"
+    },
+    {
+      "id": "medicine-18",
+      "college": "醫學院",
+      "name": "轉譯醫學博士學位學程"
+    },
+    {
+      "id": "medicine-19",
+      "college": "醫學院",
+      "name": "醫學系藥理暨毒理學 碩士班/博士班"
+    },
+    {
+      "id": "medicine-20",
+      "college": "醫學院",
+      "name": "口腔醫學暨材料研究所"
+    },
+    {
+      "id": "nursing-1",
+      "college": "護理學院",
+      "name": "護理學系(四年制、二年制)"
+    },
+    {
+      "id": "nursing-2",
+      "college": "護理學院",
+      "name": "護理科(五專)"
+    },
+    {
+      "id": "nursing-3",
+      "college": "護理學院",
+      "name": "學士後護理學系"
+    },
+    {
+      "id": "nursing-4",
+      "college": "護理學院",
+      "name": "長期照護科(二專)"
+    },
+    {
+      "id": "nursing-5",
+      "college": "護理學院",
+      "name": "護理學系碩士班"
+    },
+    {
+      "id": "nursing-6",
+      "college": "護理學院",
+      "name": "長期照護研究所"
+    },
+    {
+      "id": "engineering-1",
+      "college": "工程科技學院",
+      "name": "資訊工程學系"
+    },
+    {
+      "id": "engineering-2",
+      "college": "工程科技學院",
+      "name": "生物醫學暨工程學系"
+    },
+    {
+      "id": "engineering-3",
+      "college": "工程科技學院",
+      "name": "資訊工程學系碩士班"
+    },
+    {
+      "id": "engineering-4",
+      "college": "工程科技學院",
+      "name": "生物醫學暨工程學系碩士班"
+    },
+    {
+      "id": "engineering-5",
+      "college": "工程科技學院",
+      "name": "永續暨防災碩士學位學程"
+    },
+    {
+      "id": "humanities-1",
+      "college": "人文傳播暨社會科學院",
+      "name": "社會工作學系"
+    },
+    {
+      "id": "humanities-2",
+      "college": "人文傳播暨社會科學院",
+      "name": "人類發展與心理學系"
+    },
+    {
+      "id": "humanities-3",
+      "college": "人文傳播暨社會科學院",
+      "name": "東方語文學系"
+    },
+    {
+      "id": "humanities-4",
+      "college": "人文傳播暨社會科學院",
+      "name": "兒童發展與家庭教育學系"
+    },
+    {
+      "id": "humanities-5",
+      "college": "人文傳播暨社會科學院",
+      "name": "外國語文學系(外語暨新興科技應用學系)"
+    },
+    {
+      "id": "humanities-6",
+      "college": "人文傳播暨社會科學院",
+      "name": "傳播學系"
+    },
+    {
+      "id": "humanities-7",
+      "college": "人文傳播暨社會科學院",
+      "name": "國際數位媒體科技學士學位學程"
+    },
+    {
+      "id": "humanities-8",
+      "college": "人文傳播暨社會科學院",
+      "name": "宗教與人文研究所"
+    },
+    {
+      "id": "humanities-9",
+      "college": "人文傳播暨社會科學院",
+      "name": "教育研究所"
+    },
+    {
+      "id": "humanities-10",
+      "college": "人文傳播暨社會科學院",
+      "name": "社會工作學系碩士班"
+    },
+    {
+      "id": "humanities-11",
+      "college": "人文傳播暨社會科學院",
+      "name": "人類發展與心理學系碩士班"
+    },
+    {
+      "id": "humanities-12",
+      "college": "人文傳播暨社會科學院",
+      "name": "東方語文學系碩士班"
+    },
+    {
+      "id": "humanities-13",
+      "college": "人文傳播暨社會科學院",
+      "name": "傳播學系碩士班"
+    },
+    {
+      "id": "management-1",
+      "college": "智慧永續管理學院",
+      "name": "經營管理學系"
+    },
+    {
+      "id": "management-2",
+      "college": "智慧永續管理學院",
+      "name": "國際服務產業管理學士學位學程"
+    },
+    {
+      "id": "management-3",
+      "college": "智慧永續管理學院",
+      "name": "資訊科技與管理學系"
+    },
+    {
+      "id": "management-4",
+      "college": "智慧永續管理學院",
+      "name": "醫務暨健康管理學系"
+    },
+    {
+      "id": "management-5",
+      "college": "智慧永續管理學院",
+      "name": "醫務暨健康管理學系碩士班"
+    },
+    {
+      "id": "management-6",
+      "college": "智慧永續管理學院",
+      "name": "資訊科技與管理學系碩士班"
+    }
+  ]
+}
