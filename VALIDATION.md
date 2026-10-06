@@ -1,5 +1,7 @@
 # Verification — 2026-10-06
 
+Vercel build regression: `npm run build` now runs `prisma generate` before Next.js, explicitly refreshing the client even with cached dependencies or skipped installation hooks. The production build passed locally with `VERCEL=1` and `CI=1`, including page-data collection and static-page generation. Build output was isolated under `.next-integration/`. This check does not verify a hosted Vercel deployment. Docker uses the same build script without duplicate generation; Docker itself remains untested locally.
+
 Final checks passed: TypeScript, ESLint, 17 unit tests, three public browser tests, twelve production integration checks, the local upload/interface browser check and a read-only check of the configured owner's local admin dashboard. The production dependency audit reported zero vulnerabilities.
 
 ## Admin backend

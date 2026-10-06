@@ -83,6 +83,8 @@ The integration suite starts isolated real PostgreSQL on port 55432, an in-memor
 
 Deploy on Vercel with managed PostgreSQL and R2, or build the Dockerfile and run its standalone server on port 3000. Apply `prisma migrate deploy` as a separate release step, then seed categories and reviewed exchange points. Supply environment variables through the hosting secret manager. Use HTTPS, scoped storage credentials and production OAuth callback URLs. Font downloads occur during the build.
 
+Keep Vercel's Build Command set to `npm run build`. This script explicitly generates Prisma Client before the Next.js build, including when Vercel reuses cached dependencies or install hooks are skipped. Database migrations remain a separate release step; client generation does not migrate or seed the database.
+
 ## Before a real launch
 
 Configure production Google OAuth, R2 credentials and a managed database, and supply the official logo at `public/brand/logo.svg`. Google OAuth credentials are configured locally; fresh live sign-in confirmation remains pending. The logo and logo-derived favicon are pending that asset. Review provisional campus points and verify live OAuth/upload/email flows. See `artifacts/lighthouse-scores.json` for the latest local authenticated mobile measurement. These scores do not replace a full WCAG audit or verification on the deployed school environment. The optional map view and ratings are future extensions.

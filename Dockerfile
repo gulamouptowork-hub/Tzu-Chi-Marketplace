@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
-RUN npx prisma generate && npm run build
+RUN npm run build
 FROM node:24-alpine AS runtime
 RUN apk add --no-cache openssl
 WORKDIR /app
