@@ -1,8 +1,14 @@
-# Verification — 2026-10-06
+# Verification — 2026-10-07
 
-Vercel build regression: `npm run build` now runs `prisma generate` before Next.js, explicitly refreshing the client even with cached dependencies or skipped installation hooks. The production build passed locally with `VERCEL=1` and `CI=1`, including page-data collection and static-page generation. Build output was isolated under `.next-integration/`. This check does not verify a hosted Vercel deployment. Docker uses the same build script without duplicate generation; Docker itself remains untested locally.
+Vercel build regression: `npm run build` now runs `prisma generate` before Next.js, explicitly refreshing the client even with cached dependencies or skipped installation hooks. The production build passed locally with `VERCEL=1` and `CI=1`, including page-data collection and static-page generation. Build output was isolated under `.next-integration/`. The hosted Vercel deployment of commit `5d0a1f6` also succeeded. Docker uses the same build script without duplicate generation; Docker itself remains untested locally.
 
-Final checks passed: TypeScript, ESLint, 17 unit tests, three public browser tests, twelve production integration checks, the local upload/interface browser check and a read-only check of the configured owner's local admin dashboard. The production dependency audit reported zero vulnerabilities.
+Final checks passed: TypeScript, ESLint, 17 unit tests, three public browser tests, thirteen production integration checks, the local upload/interface browser check and a read-only check of the configured owner's local admin dashboard. The production dependency audit reported zero vulnerabilities.
+
+## Supabase preparation
+
+The new Supabase project was verified empty before initialization. All three migrations were applied successfully. A live read-only verification confirmed 16 RLS-protected application tables, 10 categories, 18 active provisional exchange points and the configured administrator. Neither Supabase's `anon` nor `authenticated` role has SELECT access to any application table. Only initial categories, landmarks and the owner account were seeded; local accounts, OAuth tokens, listings and photos were not copied.
+
+Prisma uses the transaction pooler for requests and a separate session pooler through `DIRECT_URL` for migrations. Release commands load a separate ignored environment file, preserving the local development database. The integration suite verifies that a non-owner database role cannot read application records even when it has SELECT grants, and that private original photo URLs reject anonymous requests while processed images remain readable. The S3 client uses path-style addressing and compatible checksum settings. Live image storage, production environment configuration and Google sign-in still require their own verification; these database checks do not establish that those services are configured.
 
 ## Admin backend
 

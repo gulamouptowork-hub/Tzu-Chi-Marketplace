@@ -10,6 +10,7 @@ import {
   publicObjectUrl,
   assertStorageConfigured,
   writeImageObject,
+  uploadBucket,
 } from "@/lib/storage";
 import {
   localStorageEnabled,
@@ -51,7 +52,7 @@ export async function POST(request: Request) {
         : await getSignedUrl(
             storage,
             new PutObjectCommand({
-              Bucket: process.env.S3_BUCKET,
+              Bucket: uploadBucket(),
               Key: key,
               ContentType: data.mimeType,
               ContentLength: data.bytes,
@@ -78,7 +79,7 @@ export async function POST(request: Request) {
         }
       : await storage.send(
           new GetObjectCommand({
-            Bucket: process.env.S3_BUCKET,
+            Bucket: uploadBucket(),
             Key: upload.key,
           }),
         );

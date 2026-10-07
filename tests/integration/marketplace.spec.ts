@@ -69,6 +69,18 @@ test("create with images, search, contact, mutual completion and moderation", as
     page.getByRole("heading", { name: title, exact: true }),
   ).toBeVisible();
   const id = page.url().split("/").pop()!;
+  const imageUpload = await db.upload.findFirstOrThrow({
+    where: { userId: seller.id, consumedAt: { not: null } },
+    orderBy: { createdAt: "desc" },
+  });
+  expect(
+    (
+      await context.request.get(
+        "http://127.0.0.1:59000/staging-private/" + imageUpload.key,
+      )
+    ).status(),
+  ).toBe(403);
+  expect((await context.request.get(imageUpload.url!)).status()).toBe(200);
   await page.goto("/listings/" + id + "/edit");
   await page.getByRole("spinbutton", { name: "價格（新臺幣）" }).fill("350");
   await page.getByRole("button", { name: "儲存變更", exact: true }).click();

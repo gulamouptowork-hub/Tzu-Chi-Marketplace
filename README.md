@@ -81,6 +81,8 @@ The integration suite starts isolated real PostgreSQL on port 55432, an in-memor
 
 ## Deployment
 
+For Supabase PostgreSQL, Vercel environment setup and optional Supabase image storage, follow [docs/SUPABASE.md](docs/SUPABASE.md). Prisma 6 uses separate `DATABASE_URL` and `DIRECT_URL` values for serverless requests and migrations. Locally, set both to the same development database URL.
+
 Deploy on Vercel with managed PostgreSQL and R2, or build the Dockerfile and run its standalone server on port 3000. Apply `prisma migrate deploy` as a separate release step, then seed categories and reviewed exchange points. Supply environment variables through the hosting secret manager. Use HTTPS, scoped storage credentials and production OAuth callback URLs. Font downloads occur during the build.
 
 Keep Vercel's Build Command set to `npm run build`. This script explicitly generates Prisma Client before the Next.js build, including when Vercel reuses cached dependencies or install hooks are skipped. Database migrations remain a separate release step; client generation does not migrate or seed the database.

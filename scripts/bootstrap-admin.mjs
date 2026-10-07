@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { PrismaClient } from "@prisma/client";
 for (const file of [".env.local", ".env"])
-  if (existsSync(file)) process.loadEnvFile(file);
+  if (!process.env.DATABASE_URL && existsSync(file)) process.loadEnvFile(file);
 const db = new PrismaClient();
 try {
   const domains = (process.env.ALLOWED_EMAIL_DOMAINS ?? "")

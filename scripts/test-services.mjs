@@ -25,6 +25,8 @@ const env = {
   ...process.env,
   DATABASE_URL:
     "postgresql://marketplace:test-only@localhost:55432/marketplace_test",
+  DIRECT_URL:
+    "postgresql://marketplace:test-only@localhost:55432/marketplace_test",
   SEED_DEMO: "true",
   ADMIN_EMAILS: "integration.admin@gms.tcu.edu.tw",
 };
@@ -64,6 +66,17 @@ const server = createServer(async (req, res) => {
     return;
   }
   const key = new URL(req.url, "http://localhost").pathname;
+  // Mimic a private original-photo bucket: S3 requests are signed, while
+  // anonymous URL access must fail. This fixture is not an AWS signature verifier.
+  if (
+    key.startsWith("/staging-private/") &&
+    !req.headers.authorization &&
+    !new URL(req.url, "http://localhost").searchParams.has("X-Amz-Signature")
+  ) {
+    res.writeHead(403);
+    res.end();
+    return;
+  }
   if (key === "/") {
     res.end("ready");
     return;

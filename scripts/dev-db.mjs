@@ -6,6 +6,7 @@ import { existsSync } from "node:fs";
 // .env.local so Next.js, Prisma and this server always share credentials.
 const envFile = [".env.local", ".env"].find((path) => existsSync(path));
 if (envFile) process.loadEnvFile(envFile);
+process.env.DIRECT_URL ??= process.env.DATABASE_URL;
 const url = new URL(process.env.DATABASE_URL ?? "");
 if (!["localhost", "127.0.0.1"].includes(url.hostname))
   throw new Error("db:local only serves a localhost DATABASE_URL");

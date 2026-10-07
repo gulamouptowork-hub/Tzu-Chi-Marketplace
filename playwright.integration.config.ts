@@ -3,12 +3,15 @@ const env = {
   MARKETPLACE_INTEGRATION: "true",
   DATABASE_URL:
     "postgresql://marketplace:test-only@localhost:55432/marketplace_test",
+  DIRECT_URL:
+    "postgresql://marketplace:test-only@localhost:55432/marketplace_test",
   AUTH_SECRET: "integration-test-secret-never-for-production-123456",
   AUTH_URL: "http://localhost:3001",
   ALLOWED_EMAIL_DOMAINS: "gms.tcu.edu.tw",
   S3_ENDPOINT: "http://127.0.0.1:59000",
   S3_REGION: "auto",
   S3_BUCKET: "test",
+  S3_UPLOAD_BUCKET: "staging-private",
   S3_ACCESS_KEY_ID: "test",
   S3_SECRET_ACCESS_KEY: "test",
   S3_PUBLIC_URL: "http://127.0.0.1:59000/test",

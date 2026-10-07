@@ -24,7 +24,13 @@ export async function writeImageObject(key: string, body: Buffer) {
     }),
   );
 }
+export function uploadBucket() {
+  return process.env.S3_UPLOAD_BUCKET || process.env.S3_BUCKET;
+}
 export const storage = new S3Client({
+  forcePathStyle: true,
+  requestChecksumCalculation: "WHEN_REQUIRED",
+  responseChecksumValidation: "WHEN_REQUIRED",
   endpoint: process.env.S3_ENDPOINT,
   region: process.env.S3_REGION ?? "auto",
   credentials: {
