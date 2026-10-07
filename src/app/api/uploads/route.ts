@@ -77,12 +77,19 @@ export async function POST(request: Request) {
           ContentType: upload.mimeType,
           Body: undefined,
         }
-      : await storage.send(
-          new GetObjectCommand({
-            Bucket: uploadBucket(),
-            Key: upload.key,
-          }),
-        );
+      : await storage
+          .send(
+            new GetObjectCommand({
+              Bucket: uploadBucket(),
+              Key: upload.key,
+            }),
+          )
+          .catch((error) => {
+            // A missing staged object means the browser upload never arrived.
+            if (error?.$metadata?.httpStatusCode === 404)
+              throw new Error("VALIDATION");
+            throw error;
+          });
     if (
       !object.ContentLength ||
       object.ContentLength > 5 * 1024 * 1024 ||

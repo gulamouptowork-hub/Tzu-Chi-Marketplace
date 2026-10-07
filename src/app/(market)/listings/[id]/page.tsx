@@ -136,7 +136,7 @@ export default async function ListingDetail({
                       {t("edit")}
                     </Link>
                   </Button>
-                ) : listing.status === "AVAILABLE" ? (
+                ) : listing.status === "AVAILABLE" && points.length ? (
                   <ContactDialog
                     id={id}
                     title={listing.title}

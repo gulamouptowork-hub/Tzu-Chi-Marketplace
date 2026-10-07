@@ -74,8 +74,12 @@ export default async function Profile({
       <div className="mt-8">
         {listings.length ? (
           <div className="grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 xl:grid-cols-4">
-            {listings.map((listing) => (
-              <ListingCard listing={listing} key={listing.id} />
+            {listings.map((listing, index) => (
+              <ListingCard
+                listing={listing}
+                key={listing.id}
+                eager={index < 4}
+              />
             ))}
           </div>
         ) : (

@@ -23,9 +23,12 @@ export async function generateMetadata() {
   return {
     title: t("name"),
     description: t("description"),
-    ...(existsSync(join(process.cwd(), "public/brand/logo.svg"))
-      ? { icons: { icon: "/brand/logo.svg" } }
-      : {}),
+    // Generic bag mark until the official logo is supplied; avoids a favicon 404.
+    icons: {
+      icon: existsSync(join(process.cwd(), "public/brand/logo.svg"))
+        ? "/brand/logo.svg"
+        : "/brand/mark.svg",
+    },
   };
 }
 export default async function RootLayout({

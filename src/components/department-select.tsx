@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Search } from "lucide-react";
 import catalogue from "../../messages/departments.json";
@@ -12,6 +12,12 @@ export function DepartmentSelect({ initial = "" }: { initial?: string }) {
   const filtered = catalogue.departments.filter((d) =>
     (d.name + d.college).toLowerCase().includes(query.toLowerCase()),
   );
+  const select = useRef<HTMLSelectElement>(null);
+  // A listbox counts its disabled placeholder as a choice, so `required`
+  // alone would let the form submit without a department.
+  useEffect(() => {
+    select.current?.setCustomValidity(selected ? "" : t("departmentSelect"));
+  }, [selected, t]);
   return (
     <div>
       <label htmlFor="department-search">{t("department")}</label>
@@ -36,6 +42,7 @@ export function DepartmentSelect({ initial = "" }: { initial?: string }) {
       </label>
       <select
         id="department-options"
+        ref={select}
         name="department"
         required
         value={selected}

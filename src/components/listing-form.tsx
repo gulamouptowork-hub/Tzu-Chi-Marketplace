@@ -69,13 +69,20 @@ export function ListingForm({
   const [files, setFiles] = useState<{ file: File; url: string }[]>([]);
   const [existingImages, setExistingImages] = useState(initial?.images ?? []);
   const previewUrls = useRef(new Set<string>());
+  const photoInput = useRef<HTMLInputElement>(null);
   useEffect(() => {
     const urls = previewUrls.current;
     return () => urls.forEach((url) => URL.revokeObjectURL(url));
   }, []);
-  function selectPhotos(event: React.ChangeEvent<HTMLInputElement>) {
-    const selected = Array.from(event.target.files ?? []);
-    event.target.value = "";
+  useEffect(() => {
+    // The form streams in before hydration; files picked in that window fire
+    // no React change event, so adopt them once the form is interactive.
+    if (photoInput.current?.files?.length) selectPhotos(photoInput.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  function selectPhotos(input: HTMLInputElement) {
+    const selected = Array.from(input.files ?? []);
+    input.value = "";
     if (!selected.length) return;
     if (
       existingImages.length + files.length + selected.length > 6 ||
@@ -319,8 +326,9 @@ export function ListingForm({
             type="file"
             accept="image/jpeg,image/png,image/webp"
             multiple
+            ref={photoInput}
             disabled={busy}
-            onChange={selectPhotos}
+            onChange={(event) => selectPhotos(event.currentTarget)}
             aria-describedby="listing-photo-hint"
             aria-invalid={!!photoError}
             className="mt-4 max-w-xs"

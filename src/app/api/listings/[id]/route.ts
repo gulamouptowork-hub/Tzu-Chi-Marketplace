@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { requireStudent } from "@/lib/session";
 import { assertSameOrigin, apiError } from "@/lib/api";
 import { listingSchema } from "@/lib/listing-validation";
+import { cancelActiveExchanges } from "@/lib/cancel-exchanges";
 const edit = z.union([
   z.object({ status: z.enum(["AVAILABLE", "RESERVED", "SOLD"]) }).strict(),
   listingSchema,
@@ -81,10 +82,17 @@ export async function PATCH(
         where: { id },
         data: { ...fields, images: { create: images } },
       });
-      await tx.upload.updateMany({
-        where: { id: { in: imageIds }, userId: user.id },
+      // Claim new uploads conditionally so a concurrent request cannot attach them too.
+      const claimed = await tx.upload.updateMany({
+        where: {
+          id: { in: imageIds },
+          userId: user.id,
+          completedAt: { not: null },
+          consumedAt: null,
+        },
         data: { consumedAt: new Date() },
       });
+      if (claimed.count !== uploads.length) throw new Error("CONFLICT");
       await tx.exchange.updateMany({
         where: { listingId: id, status: "PROPOSED" },
         data: { status: "CANCELLED" },
@@ -110,10 +118,7 @@ export async function DELETE(
         data: { hiddenAt: new Date() },
       });
       if (!result.count) throw new Error("NOT_FOUND");
-      await tx.exchange.updateMany({
-        where: { listingId: id, status: { in: ["PROPOSED", "ACCEPTED"] } },
-        data: { status: "CANCELLED" },
-      });
+      await cancelActiveExchanges(tx, { listingId: id });
     });
     return Response.json({ ok: true });
   } catch (error) {

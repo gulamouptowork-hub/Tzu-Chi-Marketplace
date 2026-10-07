@@ -38,6 +38,12 @@ export const listingSchema = z
         path: ["priceNtd"],
         message: "Price must be empty for free or trade",
       });
+    if (new Set(value.campuses).size !== value.campuses.length)
+      ctx.addIssue({
+        code: "custom",
+        path: ["campuses"],
+        message: "Duplicate campus",
+      });
     if (new Set(value.imageIds).size !== value.imageIds.length)
       ctx.addIssue({
         code: "custom",

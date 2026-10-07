@@ -37,7 +37,16 @@ export async function POST(
     if (!point) throw new Error("VALIDATION");
     const timeError = exchangeTimeError(scheduledAt);
     if (timeError) throw new Error(timeError);
-    await rateLimit(buyer.id, "contact", 20);
+    const duplicate = {
+      listingId: id,
+      buyerId: buyer.id,
+      pointId: point.id,
+      scheduledAt,
+      status: "PROPOSED",
+    } as const;
+    // Re-sending an identical proposal reuses it without spending the daily limit.
+    if (!(await db.exchange.findFirst({ where: duplicate })))
+      await rateLimit(buyer.id, "contact", 20);
     const exchange = await db.$transaction(async (tx) => {
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${id}))`;
       const current = await tx.listing.findFirst({
@@ -45,15 +54,7 @@ export async function POST(
       });
       if (!current || !current.campuses.includes(point.campus))
         throw new Error("CONFLICT");
-      const existing = await tx.exchange.findFirst({
-        where: {
-          listingId: id,
-          buyerId: buyer.id,
-          pointId: point.id,
-          scheduledAt,
-          status: "PROPOSED",
-        },
-      });
+      const existing = await tx.exchange.findFirst({ where: duplicate });
       if (existing) return existing;
       await tx.contactEvent.create({
         data: { listingId: id, buyerId: buyer.id },

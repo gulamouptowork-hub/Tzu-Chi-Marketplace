@@ -8,7 +8,6 @@ export async function POST(request: Request) {
     assertSameOrigin(request);
     const user = await requireStudent();
     const data = listingSchema.parse(await request.json());
-    await rateLimit(user.id, "create-listing", 10);
     const point = await db.exchangePoint.findFirst({
       where: {
         id: data.meetupLocation,
@@ -21,6 +20,8 @@ export async function POST(request: Request) {
       !(await db.category.findUnique({ where: { id: data.categoryId } }))
     )
       throw new Error("VALIDATION");
+    // Count only requests that pass validation against the daily limit.
+    await rateLimit(user.id, "create-listing", 10);
     const result = await db.$transaction(async (tx) => {
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${user.id + ":listing"}))`;
       const uploads = await tx.upload.findMany({
@@ -51,10 +52,12 @@ export async function POST(request: Request) {
           },
         },
       });
-      await tx.upload.updateMany({
-        where: { id: { in: imageIds } },
+      // Claim uploads conditionally so a concurrent edit cannot attach them too.
+      const claimed = await tx.upload.updateMany({
+        where: { id: { in: imageIds }, consumedAt: null },
         data: { consumedAt: new Date() },
       });
+      if (claimed.count !== imageIds.length) throw new Error("CONFLICT");
       return listing;
     });
     return Response.json({ id: result.id }, { status: 201 });

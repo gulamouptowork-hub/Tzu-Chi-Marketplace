@@ -44,7 +44,7 @@ export default async function Dashboard() {
         />
       ) : (
         <div className="space-y-3">
-          {listings.map((item) => (
+          {listings.map((item, index) => (
             <article
               key={item.id}
               className="card flex flex-col gap-4 p-4 sm:flex-row sm:items-center"
@@ -60,6 +60,7 @@ export default async function Dashboard() {
                       alt={item.images[0].alt}
                       fill
                       sizes="80px"
+                      loading={index < 4 ? "eager" : "lazy"}
                       className="object-cover"
                     />
                   ) : (

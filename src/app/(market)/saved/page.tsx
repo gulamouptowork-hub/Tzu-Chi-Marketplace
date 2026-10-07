@@ -43,8 +43,13 @@ export default async function Saved() {
         />
       ) : (
         <div className="grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 xl:grid-cols-4">
-          {saved.map((s) => (
-            <ListingCard key={s.listingId} listing={s.listing} savedInitial />
+          {saved.map((s, index) => (
+            <ListingCard
+              key={s.listingId}
+              listing={s.listing}
+              savedInitial
+              eager={index < 4}
+            />
           ))}
         </div>
       )}

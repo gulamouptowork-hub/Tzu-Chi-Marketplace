@@ -1,13 +1,13 @@
 "use client";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 import { TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { logout } from "@/app/actions";
 export function DeleteAccount() {
   const t = useTranslations("Dashboard");
-  const router = useRouter();
   const [confirm, setConfirm] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);
   return (
     <section className="mt-6 rounded-2xl border border-danger/20 bg-surface p-6">
@@ -27,17 +27,31 @@ export function DeleteAccount() {
               <div className="flex flex-wrap gap-3">
                 <Button
                   variant="danger"
+                  disabled={busy}
                   onClick={async () => {
-                    const result = await fetch("/api/account", {
-                      method: "DELETE",
-                    });
-                    if (result.ok) router.push("/sign-in");
-                    else setError(true);
+                    setBusy(true);
+                    setError(false);
+                    try {
+                      const result = await fetch("/api/account", {
+                        method: "DELETE",
+                      });
+                      if (!result.ok) throw new Error("DELETE");
+                    } catch {
+                      setError(true);
+                      setBusy(false);
+                      return;
+                    }
+                    // JWT sessions outlive the deleted account until signed out.
+                    await logout();
                   }}
                 >
                   {t("confirmDelete")}
                 </Button>
-                <Button variant="ghost" onClick={() => setConfirm(false)}>
+                <Button
+                  variant="ghost"
+                  disabled={busy}
+                  onClick={() => setConfirm(false)}
+                >
                   {t("cancel")}
                 </Button>
               </div>

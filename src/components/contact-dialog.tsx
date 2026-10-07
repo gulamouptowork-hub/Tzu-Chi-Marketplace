@@ -99,7 +99,13 @@ export function ContactDialog({
   return (
     <Dialog.Root
       onOpenChange={(open) => {
-        if (open) setBounds(exchangeTimeBounds());
+        if (!open) return;
+        // Each opening starts a fresh proposal rather than a stale email link.
+        setBounds(exchangeTimeBounds());
+        setMailto("");
+        setError("");
+        setTimeError(null);
+        setScheduledLocal("");
       }}
     >
       <Dialog.Trigger asChild>
@@ -139,7 +145,12 @@ export function ContactDialog({
               </Button>
             </Dialog.Close>
           </div>
-          <form onSubmit={submit} className="mt-6 space-y-5">
+          <form
+            onSubmit={submit}
+            // Edits invalidate the composed email; sending again refreshes it.
+            onChange={() => setMailto("")}
+            className="mt-6 space-y-5"
+          >
             {error && (
               <p
                 role="alert"

@@ -277,13 +277,13 @@ export async function getAdminData(query: AdminQuery) {
     }),
     db.$queryRaw<
       Daily[]
-    >`SELECT to_char("createdAt" AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Taipei', 'YYYY-MM-DD') AS day, count(*)::int AS count FROM "User" WHERE "createdAt" >= ${since} AND "deletedAt" IS NULL GROUP BY day`,
+    >`SELECT to_char("createdAt" AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Taipei', 'YYYY-MM-DD') AS day, count(*)::int AS count FROM "User" WHERE "createdAt" >= (${since}::timestamptz AT TIME ZONE 'UTC') AND "deletedAt" IS NULL GROUP BY day`,
     db.$queryRaw<
       Daily[]
-    >`SELECT to_char("createdAt" AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Taipei', 'YYYY-MM-DD') AS day, count(*)::int AS count FROM "Listing" WHERE "createdAt" >= ${since} GROUP BY day`,
+    >`SELECT to_char("createdAt" AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Taipei', 'YYYY-MM-DD') AS day, count(*)::int AS count FROM "Listing" WHERE "createdAt" >= (${since}::timestamptz AT TIME ZONE 'UTC') GROUP BY day`,
     db.$queryRaw<
       Daily[]
-    >`SELECT to_char("updatedAt" AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Taipei', 'YYYY-MM-DD') AS day, count(*)::int AS count FROM "Exchange" WHERE "updatedAt" >= ${since} AND status = 'COMPLETED' GROUP BY day`,
+    >`SELECT to_char("updatedAt" AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Taipei', 'YYYY-MM-DD') AS day, count(*)::int AS count FROM "Exchange" WHERE "updatedAt" >= (${since}::timestamptz AT TIME ZONE 'UTC') AND status = 'COMPLETED' GROUP BY day`,
     db.listing.groupBy({
       by: ["categoryId"],
       where: { hiddenAt: null, seller: activeSeller },
