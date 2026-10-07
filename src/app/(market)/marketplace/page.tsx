@@ -53,8 +53,10 @@ export default async function Feed({
   const a = await getTranslations("App");
   const campusLabels = await getTranslations("ListingForm");
   const locale = await getLocale();
-  const parsed = await browse(input);
-  const categories = await db.category.findMany();
+  const [parsed, categories] = await Promise.all([
+    browse(input),
+    db.category.findMany(),
+  ]);
   const { filters } = parsed;
   const filtered = Boolean(
     filters.q ||

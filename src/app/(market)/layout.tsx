@@ -1,11 +1,10 @@
 import { BrandLink } from "@/components/brand";
-import { isAllowedSchoolEmail } from "@/lib/auth-policy";
+import { requireStudentPage } from "@/lib/session";
+import { Suspense } from "react";
+import Loading from "./loading";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Plus } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { auth } from "@/auth";
-import { db } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { LanguageToggle, SiteFooter } from "@/components/site-chrome";
 import {
@@ -14,22 +13,30 @@ import {
   HeaderNav,
   HeaderSearch,
 } from "@/components/site-nav";
-export default async function MarketLayout({
+export default function MarketLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
-  if (!session?.user?.id) redirect("/sign-in");
-  const user = await db.user.findUnique({ where: { id: session.user.id } });
-  if (
-    !user ||
-    user.deletedAt ||
-    user.suspendedAt ||
-    !isAllowedSchoolEmail(user.email, process.env.ALLOWED_EMAIL_DOMAINS ?? "")
-  )
-    redirect("/auth-error");
-  if (!user.rulesAcceptedAt) redirect("/onboarding");
+  return (
+    <Suspense
+      fallback={
+        <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <Loading />
+        </div>
+      }
+    >
+      <AuthenticatedMarketLayout>{children}</AuthenticatedMarketLayout>
+    </Suspense>
+  );
+}
+async function AuthenticatedMarketLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  // Share the request's authorization lookup with the page, without caching users across requests.
+  const user = await requireStudentPage();
   const t = await getTranslations("App");
   return (
     <div className="flex min-h-screen flex-col">
