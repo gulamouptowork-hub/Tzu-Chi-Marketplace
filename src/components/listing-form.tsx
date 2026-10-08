@@ -103,6 +103,15 @@ export function ListingForm({
     setFiles((current) => [...current, ...added]);
     setPhotoError("");
   }
+  // Keep the server's reason when the student cannot fix it by editing the form.
+  async function failure(response: Response, fallback: string) {
+    const { error } = await response.json().catch(() => ({ error: "" }));
+    return new Error(
+      ["STORAGE_NOT_CONFIGURED", "RATE_LIMIT"].includes(error)
+        ? error
+        : fallback,
+    );
+  }
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (existingImages.length + files.length < 1) {
@@ -116,7 +125,9 @@ export function ListingForm({
       if (existingImages.length + files.length > 6) throw new Error("IMAGE");
       const imageIds: string[] = existingImages.map((image) => image.id);
       for (const { file } of files) {
-        const blob = await compress(file);
+        const blob = await compress(file).catch(() => {
+          throw new Error("UPLOAD");
+        });
         const response = await fetch("/api/uploads", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -126,12 +137,14 @@ export function ListingForm({
             bytes: blob.size,
           }),
         });
-        if (!response.ok) throw new Error("UPLOAD");
+        if (!response.ok) throw await failure(response, "UPLOAD");
         const upload = await response.json();
         const stored = await fetch(upload.url, {
           method: "PUT",
           headers: { "Content-Type": "image/webp" },
           body: blob,
+        }).catch(() => {
+          throw new Error("UPLOAD");
         });
         if (!stored.ok) throw new Error("UPLOAD");
         const complete = await fetch("/api/uploads", {
@@ -139,7 +152,7 @@ export function ListingForm({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ action: "complete", id: upload.id }),
         });
-        if (!complete.ok) throw new Error("UPLOAD");
+        if (!complete.ok) throw await failure(complete, "UPLOAD");
         imageIds.push(upload.id);
       }
       const data = {
@@ -162,13 +175,20 @@ export function ListingForm({
           body: JSON.stringify(data),
         },
       );
-      if (!response.ok) throw new Error("SAVE");
+      if (!response.ok) throw await failure(response, "SAVE");
       const listing = await response.json();
       toast(t("published"));
       router.push("/listings/" + listing.id);
       router.refresh();
-    } catch {
-      setError(t("error"));
+    } catch (problem) {
+      const messages: Record<string, string> = {
+        STORAGE_NOT_CONFIGURED: t("storageError"),
+        RATE_LIMIT: t("rateLimitError"),
+        UPLOAD: t("uploadError"),
+      };
+      setError(
+        messages[problem instanceof Error ? problem.message : ""] ?? t("error"),
+      );
     } finally {
       setBusy(false);
     }
